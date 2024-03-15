@@ -7,6 +7,7 @@ import Profile from './../assets/profile.png'
 import LikeFade from './../assets/LikeFade.png'
 import Bars from './../assets/bars.png'
 
+import Main from "./Main";
 import User from "./Mobile/User";
 import TrendingSection from "./Mobile/TrendingSection";
 
@@ -36,6 +37,7 @@ const Header = () => {
   };
 
   return (
+    <>
     <div className=" w-full grid grid-cols-7 border-b border-b-[#323232]">
       <div className="lg:col-span-2 md:col-span-2 col-span-auto flex items-center justify-center">
         <h1 className="text-center p-3 font-Robo font-medium text-[22px] lg:inline md:inline hidden">
@@ -62,6 +64,10 @@ const Header = () => {
         </div>
       </div>
     </div>
+    <Main homeActive={isHomeActive}/>
+
+    </>
+
   );
 };
 

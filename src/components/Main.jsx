@@ -4,7 +4,7 @@ import UserProfile from './UserProfile'
 import Trends from "./Trends";
 import Quotes from "./Quotes";
 
-const Main = () => {
+const Main = ({homeActive = false}) => {
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [randomQuotes, setRandomQuotes] = useState([]);
   const [limit, setLimit] = useState(5);
@@ -49,7 +49,9 @@ const Main = () => {
           <UserProfile />
         </div>
 
-        <div id="scroll" className="lg:col-span-3 md:col-span-3 col-span-7 sm:max-h-screen grid">
+        <div id="scroll" className="lg:col-span-3 md:col-span-3 col-span-7 sm:max-h-screen">
+          {homeActive ? 
+          <div className="grid">
           <div className="cursor-pointer">
             {selectedQuote ? (
               <Quotes
@@ -75,6 +77,9 @@ const Main = () => {
             )}
           </div>
           {!isClose ? <button onClick={() => setLimit(prevLimit => prevLimit + 5)} className="text-center p-10">More Quotes</button> : null}
+          </div>
+          : <p className="p-10 text-center text-gray-500 text-[15px]">No Liked Posts</p>
+          }
         </div>
 
         <div className="hidden lg:col-span-2 md:col-span-2 col-span-auto p-[48px] lg:flex md:flex flex-col gap-[16px]">
