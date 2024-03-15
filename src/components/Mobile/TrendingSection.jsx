@@ -14,12 +14,12 @@ const TrendingSection = () => {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full bg-[#000000a8] backdrop-blur-lg w-[70%] transition-transform duration-300 p-10 flex flex-col gap-8 transform ${
+      className={`fixed top-0 right-0 h-full bg-[#000000a8] backdrop-blur-lg w-[70%] transition-transform duration-300 p-10 flex flex-col gap-8 transform cursor-pointer ${
         isProfileOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
       onClick={handleClickOutside}
     >
-      <CircleX onClick={handleClickOutside} />
+      <CircleX onClick={handleClickOutside} className="text-[gray]"/>
       <div className="flex justify-between items-center">
         <h2 className="text-[15px] font-bold">Trending Topics</h2>
         <img src={Settings} alt="" className="w-[19px] h-[19px]" />

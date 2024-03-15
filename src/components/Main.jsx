@@ -1,62 +1,76 @@
-import React,{useState, useEffect} from "react";
-
+import React, { useState, useEffect } from "react";
 import Settings from './../assets/settings.png'
 import UserProfile from './UserProfile'
-
 import Trends from "./Trends";
 import Quotes from "./Quotes";
 
 const Main = () => {
-  const [quotes, setQuote] = useState([]);
+  const [selectedQuote, setSelectedQuote] = useState(null);
+  const [randomQuotes, setRandomQuotes] = useState([]);
   const [limit, setLimit] = useState(5);
 
-
-
   useEffect(() => {
-    const fetchQuote = async () => {
+    const fetchRandomQuotes = async () => {
       try {
         const response = await fetch(`https://api.quotable.io/quotes/random?limit=${limit}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch quote");
+          throw new Error("Failed to fetch random quotes");
         }
         const data = await response.json();
-        setQuote(data);
-        // console.log(data)
+        setRandomQuotes(data);
       } catch (error) {
-        console.error("Error fetching quote:", error);
+        console.error("Error fetching random quotes:", error);
       }
     };
 
-    fetchQuote();
+    fetchRandomQuotes();
   }, [limit]);
+  
 
-  const fetchMoreQuotes = () => {
-    setLimit(prevLimit => prevLimit + 5);
+  const handleQuoteClick = async (quoteId) => {
+    try {
+      const response = await fetch(`https://api.quotable.io/quotes/${quoteId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch quote");
+      }
+      const data = await response.json();
+      setSelectedQuote(data);
+      console.log("In id,", quoteId);
+    } catch (error) {
+      console.error("Error fetching quote:", error);
+    }
   };
 
   return (
-
     <div>
-      <div className=" w-full grid grid-cols-7 ">
-        <div className="lg:inline md:inline hidden md:col-span-2 lg:col-span-2 ">
-        <UserProfile />
+      <div className="w-full grid grid-cols-7">
+        <div className="lg:inline md:inline hidden md:col-span-2 lg:col-span-2">
+          <UserProfile />
         </div>
 
         <div id="scroll" className="lg:col-span-3 md:col-span-3 col-span-7 sm:max-h-screen grid">
-          <div>          
-          {quotes.map(q => (
-
+          <div className="cursor-pointer">
+            {selectedQuote ? (
+              <Quotes
+                Name={selectedQuote.author}
+                Quote={selectedQuote.content}
+                tag={selectedQuote.tags.join(" • ")}
+                onClick={() => setSelectedQuote(null)} // Close quote when clicked again
+                Close={true}
+              />
+            ) : (
+              randomQuotes.map(q => (
                 <Quotes
+                  key={q._id}
                   Name={q.author}
                   Quote={q.content}
                   tag={q.tags.join(" • ")}
-                  onClick={() => handleQuoteClick(q._id)}
-                  />
-            ))}
-
- 
+                  onClick={() => handleQuoteClick(q._id)} // Call handleQuoteClick here
+                />
+              ))
+            )}
           </div>
-          <button onClick={fetchMoreQuotes} className="text-center p-10">More Quotes</button>
+          <button onClick={() => setLimit(prevLimit => prevLimit + 5)} className="text-center p-10">More Quotes</button>
         </div>
 
         <div className="hidden lg:col-span-2 md:col-span-2 col-span-auto p-[48px] lg:flex md:flex flex-col gap-[16px]">
@@ -75,7 +89,6 @@ const Main = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
