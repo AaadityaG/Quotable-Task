@@ -8,6 +8,7 @@ const Main = () => {
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [randomQuotes, setRandomQuotes] = useState([]);
   const [limit, setLimit] = useState(5);
+  const [isClose, setIsClose] = useState(false);
 
   useEffect(() => {
     const fetchRandomQuotes = async () => {
@@ -35,7 +36,7 @@ const Main = () => {
       }
       const data = await response.json();
       setSelectedQuote(data);
-      console.log("In id,", quoteId);
+      setIsClose(!isClose);
     } catch (error) {
       console.error("Error fetching quote:", error);
     }
@@ -55,8 +56,11 @@ const Main = () => {
                 Name={selectedQuote.author}
                 Quote={selectedQuote.content}
                 tag={selectedQuote.tags.join(" • ")}
-                onClick={() => setSelectedQuote(null)} // Close quote when clicked again
-                Close={true}
+                onClick={() => {
+                  setSelectedQuote(null);
+                  setIsClose(false);
+                }} // Close quote when clicked again
+                Close={isClose}
               />
             ) : (
               randomQuotes.map(q => (
@@ -70,7 +74,7 @@ const Main = () => {
               ))
             )}
           </div>
-          <button onClick={() => setLimit(prevLimit => prevLimit + 5)} className="text-center p-10">More Quotes</button>
+          {!isClose ? <button onClick={() => setLimit(prevLimit => prevLimit + 5)} className="text-center p-10">More Quotes</button> : null}
         </div>
 
         <div className="hidden lg:col-span-2 md:col-span-2 col-span-auto p-[48px] lg:flex md:flex flex-col gap-[16px]">
